@@ -67,6 +67,28 @@ services:
     networks:
       - apisix
 
+  grafana:
+    image: grafana/grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./configuration_files/grafana_conf/provisioning:/etc/grafana/provisioning:z
+      - ./configuration_files/grafana_conf/dashboards:/var/lib/grafana/dashboards:z
+      - ./configuration_files/grafana_conf/config/grafana.ini:/etc/grafana/grafana.ini:z
+    networks:
+      apisix:
+
+  prometheus:
+    image: prom/prometheus
+    restart: always
+    volumes:
+      - ./configuration_files/prometheus_conf/prometheus.yml:/etc/prometheus/prometheus.yml:z
+    ports:
+      - "9090:9090"
+    networks:
+      apisix:
+
 networks:
   apisix:
     driver: bridge
